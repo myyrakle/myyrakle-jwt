@@ -1,0 +1,12 @@
+[package]
+name = "myyrakle-jwt"
+version = "0.1.0"
+authors = ["myyrakle <sssang97@naver.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+epoch-timestamp = "1.0.0"
+serde = "1"
+jsonwebtoken = "7.2.0"
