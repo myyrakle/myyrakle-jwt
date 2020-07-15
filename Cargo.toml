@@ -19,6 +19,3 @@ homepage = "https://github.com/myyrakle/myyrakle-jwt/blob/master/README.md" #홈
 epoch-timestamp = "1.0.0"
 serde = "1"
 jsonwebtoken = "7.2.0"
-
-[lib]
-proc-macro = true

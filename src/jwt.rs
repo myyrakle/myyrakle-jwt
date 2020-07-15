@@ -1,16 +1,19 @@
+mod components;
+use components::*;
+
 use epoch_timestamp::Epoch;
 use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Header, Validation};
 
-#[derive(serde::Serialize, serde::Deserialize)]
 pub struct JWT<T> {
     key: String,
     algorithm: Algorithm,
     exp: u64,
+    phantom: std::marker::PhantomData<T>,
 }
 
 impl<T> JWT<T> {
     pub fn new(key: String, algorithm: String, expire: String) -> Result<JWT<T>, JWTError> {
-        let algorithm = match algorithm {
+        let algorithm = match algorithm.as_ref() {
             "HS256" => Algorithm::HS256,
             "HS384" => Algorithm::HS384,
             "HS512" => Algorithm::HS512,
@@ -22,7 +25,7 @@ impl<T> JWT<T> {
             "PS256" => Algorithm::PS256,
             "PS384" => Algorithm::PS384,
             "PS512" => Algorithm::PS512,
-            _ => return Err(),
+            _ => return Err(JWTError::new("".to_string())),
         };
 
         let mut chars: std::vec::Vec<char> = expire.chars().collect();
@@ -38,36 +41,42 @@ impl<T> JWT<T> {
             'd' => Epoch::day(number),
             'w' => Epoch::week(number),
             'y' => Epoch::year(number),
-            _ => return Err(), //invalid suffix
+            _ => return Err(JWTError::new("".to_string())), //invalid suffix
         };
 
         Ok(JWT {
             key,
             algorithm,
             exp,
+            phantom: std::marker::PhantomData,
         })
     }
 
-    pub fn sign(payload: T) -> Result<String, JWTError> {
-        let tokenResult = jsonwebtoken::encode(
+    pub fn sign(data: T) -> Result<String, JWTError> {
+        let token_result = jsonwebtoken::encode(
             &Header::new(Algorithm::HS256),
             &payload,
             &EncodingKey::from_secret(self.key),
         );
 
-        if (tokenResult.is_ok()) {
-            Ok(tokenResult.unwrap().to_string())
+        if (token_result.is_ok()) {
+            Ok(token_result.unwrap().to_string())
         } else {
-            Err()
+            Err(JWTError::new("".to_string()))
         }
     }
 
     pub fn verify(token: String) -> Result<T, JWTError> {
-        jsonwebtoken::decode::<Payload>(
+        let decoded_result = jsonwebtoken::decode::<Payload>(
             &token,
             &DecodingKey::from_secret(self.key),
             &Validation::new(Algorithm::HS256),
-        )
-        .expect("토큰 검증 실패");
+        );
+
+        if (decoded_result.is_ok()) {
+            Ok(decoded_result.unwrap().claims.data)
+        } else {
+            Err(JWTError::new("invalid token".to_string()))
+        }
     }
 }
