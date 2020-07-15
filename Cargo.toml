@@ -13,8 +13,6 @@ repository = "https://github.com/myyrakle/myyrakle-jwt" #레포지토리
 documentation = "https://github.com/myyrakle/myyrakle-jwt/blob/master/README.md" #문서 사이트
 homepage = "https://github.com/myyrakle/myyrakle-jwt/blob/master/README.md" #홈페이지 사이트
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 epoch-timestamp = "1.0.0"
 serde = "1"
