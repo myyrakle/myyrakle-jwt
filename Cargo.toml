@@ -1,17 +1,17 @@
 [package]
 name = "myyrakle-jwt"
-version = "0.1.0" #고유한 버전. (게시할 때마다 올려야 함)
-authors = ["myyrakle <sssang97@naver.com>"] #작성자
-description = "test crate" #그냥 설명문
-keywords = ["jwt", "jsonwebtoken", "json", "auth"] #검색용 키워드
+version = "0.1.0" 
+authors = ["myyrakle <sssang97@naver.com>"] 
+description = "test crate" 
+keywords = ["jwt", "jsonwebtoken", "json", "auth"] 
 edition = "2018" 
-license = "MIT" #라이센스
-include = ["src/jwt.rs", "Cargo.toml"] #업로드 대상
-exclude = ["src/main.rs"] #업로드 제외
+license = "MIT" 
+include = ["src/*", "Cargo.toml"] 
+exclude = ["src/main.rs"] 
 readme = "README.md" #crate 페이지의 소개문 파일
-repository = "https://github.com/myyrakle/myyrakle-jwt" #레포지토리
-documentation = "https://github.com/myyrakle/myyrakle-jwt/blob/master/README.md" #문서 사이트
-homepage = "https://github.com/myyrakle/myyrakle-jwt/blob/master/README.md" #홈페이지 사이트
+repository = "https://github.com/myyrakle/myyrakle-jwt" 
+documentation = "https://github.com/myyrakle/myyrakle-jwt/blob/master/README.md" 
+homepage = "https://github.com/myyrakle/myyrakle-jwt/blob/master/README.md" 
 
 [dependencies]
 epoch-timestamp = "1.0.0"

@@ -1,3 +1,4 @@
+#[path = "./components/mod.rs"]
 mod components;
 use components::*;
 
@@ -25,7 +26,7 @@ impl<T> JWT<T> {
             "PS256" => Algorithm::PS256,
             "PS384" => Algorithm::PS384,
             "PS512" => Algorithm::PS512,
-            _ => return Err(JWTError::new("".to_string())),
+            _ => return Err(JWTError::new("Algorithm not supported".to_string())),
         };
 
         let mut chars: std::vec::Vec<char> = expire.chars().collect();
@@ -55,8 +56,8 @@ impl<T> JWT<T> {
     pub fn sign(data: T) -> Result<String, JWTError> {
         let token_result = jsonwebtoken::encode(
             &Header::new(Algorithm::HS256),
-            &payload,
-            &EncodingKey::from_secret(self.key),
+            &data,
+            &EncodingKey::from_secret(key),
         );
 
         if (token_result.is_ok()) {
