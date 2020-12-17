@@ -53,24 +53,24 @@ impl<T> JWT<T> {
         })
     }
 
-    pub fn sign(data: T) -> Result<String, JWTError> {
+    pub fn sign(&self, data: T) -> Result<String, JWTError> {
         let token_result = jsonwebtoken::encode(
             &Header::new(Algorithm::HS256),
             &data,
-            &EncodingKey::from_secret(key),
+            &EncodingKey::from_secret(self.key.as_bytes()),
         );
 
-        if (token_result.is_ok()) {
+        if token_result.is_ok() {
             Ok(token_result.unwrap().to_string())
         } else {
             Err(JWTError::new("".to_string()))
         }
     }
 
-    pub fn verify(token: String) -> Result<T, JWTError> {
+    pub fn verify(&self, token: String) -> Result<T, JWTError> {
         let decoded_result = jsonwebtoken::decode::<Payload>(
             &token,
-            &DecodingKey::from_secret(self.key),
+            &DecodingKey::from_secret(self.key.as_bytes()),
             &Validation::new(Algorithm::HS256),
         );
 
