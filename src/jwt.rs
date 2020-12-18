@@ -31,7 +31,8 @@ impl<T> JWT<T> {
 
         let mut chars: std::vec::Vec<char> = expire.chars().collect();
         let last_character = chars.pop().expect("empty expire string");
-        let number: u64 = String::from_iter(chars.into_iter())
+        let string: String = chars.into_iter().collect();
+        let number: u64 = string
             .parse()
             .expect("invalid number value");
 
@@ -74,7 +75,7 @@ impl<T> JWT<T> {
             &Validation::new(Algorithm::HS256),
         );
 
-        if (decoded_result.is_ok()) {
+        if decoded_result.is_ok() {
             Ok(decoded_result.unwrap().claims.data)
         } else {
             Err(JWTError::new("invalid token".to_string()))
