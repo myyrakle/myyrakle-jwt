@@ -4,16 +4,26 @@ use components::*;
 
 use epoch_timestamp::Epoch;
 use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Header, Validation};
+use serde::{Deserialize, Serialize};
 
-pub struct JWT<T> {
+pub struct JWT<'a, T>
+where
+    T: Serialize + Deserialize<'a>,
+{
     key: String,
     algorithm: Algorithm,
     exp: u64,
     phantom: std::marker::PhantomData<T>,
 }
 
-impl<T> JWT<T> {
-    pub fn new(key: String, algorithm: String, expire: String) -> Result<JWT<T>, JWTError> {
+impl<'a, T> JWT<'a, T>
+where
+    T: Serialize + Deserialize<'a>,
+{
+    pub fn new(key: String, algorithm: String, expire: String) -> Result<JWT<'a, T>, JWTError>
+    where
+        T: Serialize + Deserialize<'a>,
+    {
         let algorithm = match algorithm.as_ref() {
             "HS256" => Algorithm::HS256,
             "HS384" => Algorithm::HS384,
@@ -32,9 +42,7 @@ impl<T> JWT<T> {
         let mut chars: std::vec::Vec<char> = expire.chars().collect();
         let last_character = chars.pop().expect("empty expire string");
         let string: String = chars.into_iter().collect();
-        let number: u64 = string
-            .parse()
-            .expect("invalid number value");
+        let number: u64 = string.parse().expect("invalid number value");
 
         let exp = match last_character {
             's' => Epoch::second(number),
